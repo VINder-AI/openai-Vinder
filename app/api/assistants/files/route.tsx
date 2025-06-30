@@ -1,5 +1,5 @@
-import { assistantId } from "@/assistant-config";
-import { openai } from "@/openai";
+import { assistantId } from "@/app/assistant-config";
+import { openai } from "@/app/openai";
 
 // upload file to assistant's vector store
 export async function POST(request) {
