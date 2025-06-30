@@ -3,16 +3,21 @@ import { openai } from "@/app/openai";
 
 export const runtime = "nodejs";
 
-// Send a new message to a thread
-export async function POST(request, { params: { threadId } }) {
-  const { content } = await request.json();
+// Send a new message to a thread and stream response
+export async function POST(
+  req: Request,
+  { params }: { params: { threadId: string } }
+) {
+  const { content } = await req.json();
 
-  await openai.beta.threads.messages.create(threadId, {
+  // Add message to thread
+  await openai.beta.threads.messages.create(params.threadId, {
     role: "user",
-    content: content,
+    content,
   });
 
-  const stream = openai.beta.threads.runs.stream(threadId, {
+  // Start streaming the assistant run
+  const stream = await openai.beta.threads.runs.stream(params.threadId, {
     assistant_id: assistantId,
   });
 
