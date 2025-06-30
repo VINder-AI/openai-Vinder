@@ -1,96 +1,57 @@
+/* FILE: app/components/chat.module.css */
+
 .chatContainer {
   display: flex;
-  flex-direction: column-reverse;
-  height: 100%;
-  width: 100%;
-}
-
-.inputForm {
-  display: flex;
-  width: 100%;
-  padding: 10px;
-  padding-bottom: 40px;
-  order: 1;
-}
-
-.input {
-  flex-grow: 1;
-  padding: 16px 24px;
-  margin-right: 10px;
-  border-radius: 60px;
-  border: 2px solid transparent;
-  font-size: 1em;
-  background-color: #efefef;
-}
-
-.input:focus {
-  outline: none !important;
-  border-color: #000;
-  background-color: white;
-}
-
-.button {
-  padding: 8px 24px;
-  background-color: #000;
-  color: white;
-  border: none;
-  font-size: 1em;
-  border-radius: 60px; /* Removed duplicate border-radius property */
-}
-
-.button:disabled {
-  background-color: lightgrey;
+  flex-direction: column;
+  height: 100vh;
+  padding: 16px;
+  background-color: #f9f9f9;
 }
 
 .messages {
-  flex-grow: 1;
+  flex: 1;
   overflow-y: auto;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  order: 2;
-  white-space: pre-wrap;
-}
-
-.userMessage,
-.assistantMessage,
-.codeMessage {
-  margin: 8px 0;
-  padding: 8px 16px;
-  align-self: flex-start;
-  border-radius: 15px;
-  max-width: 80%;
-  overflow-wrap: break-word;
-}
-
-.assistantMessage img {
-  max-width: 100%;
-  margin: 8px 0px 8px 0px;
-  border-radius: 8px;
+  margin-bottom: 16px;
 }
 
 .userMessage {
   align-self: flex-end;
-  color: #fff;
-  background-color: #000;
+  background-color: #e6f7ff;
+  padding: 8px 12px;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  max-width: 80%;
 }
 
 .assistantMessage {
-  background-color: #efefef;
+  align-self: flex-start;
+  background-color: #fff;
+  padding: 8px 12px;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  max-width: 80%;
 }
 
 .codeMessage {
-  padding: 10px 16px;
-  background-color: #e9e9e9;
   font-family: monospace;
-  counter-reset: line;
+  background: #111;
+  color: #0f0;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  overflow-x: auto;
 }
 
-.codeMessage > div {
-  margin-top: 4px;
+.inputForm {
+  display: flex;
 }
 
-.codeMessage span {
-  color: #b8b8b8;
-  margin-right: 8px;
+.input {
+  flex: 1;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.button {
+  padding: 10px 20px;
 }
