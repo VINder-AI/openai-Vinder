@@ -8,4 +8,4 @@ export default function Home() {
 }
 
 // Make sure this import is at the top:
-import Chat from "@/components/chat.tsx";
+import Chat from "@/app/components/chat.tsx";
