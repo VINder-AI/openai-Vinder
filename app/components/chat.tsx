@@ -185,4 +185,42 @@ const Chat = ({
     });
   };
 
-  const appendMessage = (role: string, text: string)
+  const appendMessage = (role: string, text: string) => {
+    setMessages((prevMessages) => [...prevMessages, { role, text }]);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!userInput.trim()) return;
+    sendMessage(userInput);
+    setMessages((prevMessages) => [...prevMessages, { role: "user", text: userInput }]);
+    setUserInput("");
+    setInputDisabled(true);
+    scrollToBottom();
+  };
+
+  return (
+    <div className={styles.chatContainer}>
+      <div className={styles.messages}>
+        {messages.map((msg, index) => (
+          <Message key={index} role={msg.role} text={msg.text} />
+        ))}
+        <div ref={messagesEndRef} />
+      </div>
+      <form onSubmit={handleSubmit} className={`${styles.inputForm} ${styles.clearfix}`}>
+        <input
+          type="text"
+          className={styles.input}
+          value={userInput}
+          onChange={(e) => setUserInput(e.target.value)}
+          placeholder="Enter your question"
+        />
+        <button type="submit" className={styles.button} disabled={inputDisabled}>
+          Send
+        </button>
+      </form>
+    </div>
+  );
+};
+
+export default Chat;
