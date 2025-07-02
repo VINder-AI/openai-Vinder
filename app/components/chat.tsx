@@ -2,9 +2,9 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import styles from "./chat.module.css";
-import { AssistantStream } from "openai/lib/AssistantStream"; // Streaming handler
-import Markdown from "react-markdown"; // Markdown for assistant message formatting
-import { RequiredActionFunctionToolCall } from "openai/resources/beta/threads/runs/runs"; // Tool call handling
+import { AssistantStream } from "openai/lib/AssistantStream";
+import Markdown from "react-markdown";
+import { RequiredActionFunctionToolCall } from "openai/resources/beta/threads/runs/runs";
 
 type MessageProps = {
   role: "user" | "assistant" | "code";
@@ -72,6 +72,36 @@ const Chat = ({
     };
     createThread();
   }, []);
+
+  useEffect(() => {
+    const fireAutoPrompt = async () => {
+      if (messages.length > 0 || !threadId) return;
+
+      const getZipFromIP = async (): Promise<string> => {
+        try {
+          const res = await fetch("https://ipapi.co/json/");
+          const data = await res.json();
+          return data.postal || "your area";
+        } catch {
+          return "your area";
+        }
+      };
+
+      const prompts = [
+        (zip: string) => `Hey! I’m VINderGPT — testing live using your ZIP (${zip}). Want to see how I match EVs in your area using Buyer, Sales, or OEM mode?`,
+        (zip: string) => `Live VINder demo in ${zip} 🚗 — try: “Find me a long-range sedan with light interior”`,
+        (zip: string) => `ZIP ${zip} detected. Let’s explore regional EV trends. Want to test Buyer Mode or Sales Mode?`,
+      ];
+
+      const zip = await getZipFromIP();
+      const selected = prompts[Math.floor(Math.random() * prompts.length)](zip);
+
+      setMessages((prev) => [...prev, { role: "user", text: selected }]);
+      await sendMessage(selected);
+    };
+
+    fireAutoPrompt();
+  }, [threadId]);
 
   const sendMessage = async (text: string) => {
     const response = await fetch(`/api/assistants/threads/${threadId}/messages`, {
@@ -155,42 +185,4 @@ const Chat = ({
     });
   };
 
-  const appendMessage = (role: string, text: string) => {
-    setMessages((prevMessages) => [...prevMessages, { role, text }]);
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!userInput.trim()) return;
-    sendMessage(userInput);
-    setMessages((prevMessages) => [...prevMessages, { role: "user", text: userInput }]);
-    setUserInput("");
-    setInputDisabled(true);
-    scrollToBottom();
-  };
-
-  return (
-    <div className={styles.chatContainer}>
-      <div className={styles.messages}>
-        {messages.map((msg, index) => (
-          <Message key={index} role={msg.role} text={msg.text} />
-        ))}
-        <div ref={messagesEndRef} />
-      </div>
-      <form onSubmit={handleSubmit} className={`${styles.inputForm} ${styles.clearfix}`}>
-        <input
-          type="text"
-          className={styles.input}
-          value={userInput}
-          onChange={(e) => setUserInput(e.target.value)}
-          placeholder="Enter your question"
-        />
-        <button type="submit" className={styles.button} disabled={inputDisabled}>
-          Send
-        </button>
-      </form>
-    </div>
-  );
-};
-
-export default Chat;
+  const appendMessage = (role: string, text: string)
